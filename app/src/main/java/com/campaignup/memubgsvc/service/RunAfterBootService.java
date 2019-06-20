@@ -114,6 +114,7 @@ public class RunAfterBootService extends Service {
         queue.add(jsonObjectRequest);
 
         Log.d(TAG_BOOT_EXECUTE_SERVICE, "RunAfterBootService request");
+
         return super.onStartCommand(intent, flags, startId);
     }
 
