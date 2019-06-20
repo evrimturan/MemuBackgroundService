@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/MemuBackgroundService.iml" filepath="$PROJECT_DIR$/MemuBackgroundService.iml" />
       <module fileurl="file://$PROJECT_DIR$/MemuBgSvc.iml" filepath="$PROJECT_DIR$/MemuBgSvc.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
