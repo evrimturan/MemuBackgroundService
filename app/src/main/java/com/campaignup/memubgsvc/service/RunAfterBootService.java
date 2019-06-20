@@ -20,12 +20,16 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
+
 
 public class RunAfterBootService extends Service {
 
     private static final String TAG_BOOT_EXECUTE_SERVICE = "BOOT_BROADCAST_SERVICE";
+    private String guid;
 
     public RunAfterBootService() {
     }
@@ -38,6 +42,7 @@ public class RunAfterBootService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
+        guid = UUID.randomUUID().toString();
         Log.d(TAG_BOOT_EXECUTE_SERVICE, "RunAfterBootService onCreate() method.");
 
     }
@@ -49,6 +54,7 @@ public class RunAfterBootService extends Service {
         Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
         Log.d(TAG_BOOT_EXECUTE_SERVICE, "RunAfterBootService onStartCommand() method.");
 
+        String time = String.valueOf(Calendar.getInstance().getTimeInMillis());
 
         /*
         // Instantiate the RequestQueue.
@@ -85,8 +91,8 @@ public class RunAfterBootService extends Service {
 
         JSONObject JSON = new JSONObject();
         try {
-            JSON.put("guid", "4313");
-            JSON.put("time", "5555555555");
+            JSON.put("guid", guid);
+            JSON.put("time", time);
         } catch (JSONException e) {
             e.printStackTrace();
         }
