@@ -1,8 +1,11 @@
 package com.campaignup.memubgsvc.service;
 
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
+import android.provider.Settings;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -30,6 +33,7 @@ public class RunAfterBootService extends Service {
 
     private static final String TAG_BOOT_EXECUTE_SERVICE = "BOOT_BROADCAST_SERVICE";
     private String guid;
+    private String androidID;
 
     public RunAfterBootService() {
     }
@@ -43,7 +47,10 @@ public class RunAfterBootService extends Service {
     public void onCreate() {
         super.onCreate();
         guid = UUID.randomUUID().toString();
+        androidID = Settings.Secure.getString(getApplicationContext().getContentResolver(), Settings.Secure.ANDROID_ID);
         Log.d(TAG_BOOT_EXECUTE_SERVICE, "RunAfterBootService onCreate() method.");
+        Log.d(TAG_BOOT_EXECUTE_SERVICE, "AndroidID " + androidID);
+
 
     }
 
@@ -91,7 +98,7 @@ public class RunAfterBootService extends Service {
 
         JSONObject JSON = new JSONObject();
         try {
-            JSON.put("guid", guid);
+            JSON.put("guid", androidID);
             JSON.put("time", time);
         } catch (JSONException e) {
             e.printStackTrace();
