@@ -111,7 +111,6 @@ public class RunAfterBootService extends Service {
                         Log.d(TAG_BOOT_EXECUTE_SERVICE, "RunAfterBootService onResponse() method.");
                     }
                 }, new Response.ErrorListener() {
-
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Log.d(TAG_BOOT_EXECUTE_SERVICE, "RunAfterBootService onErrorResponse() method.");
