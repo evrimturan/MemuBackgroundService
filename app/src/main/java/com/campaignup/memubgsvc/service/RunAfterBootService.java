@@ -94,7 +94,7 @@ public class RunAfterBootService extends Service {
         queue.add(stringRequest);*/
 
         RequestQueue queue = Volley.newRequestQueue(this);
-        String url ="http://10.0.2.2:8080/test";
+        String url ="http://104.40.132.100:80/test";
 
         JSONObject JSON = new JSONObject();
         try {
