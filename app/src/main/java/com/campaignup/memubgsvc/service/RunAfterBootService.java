@@ -33,7 +33,11 @@ public class RunAfterBootService extends Service {
 
     private static final String TAG_BOOT_EXECUTE_SERVICE = "BOOT_BROADCAST_SERVICE";
     private String guid;
+    private String time;
     private String androidID;
+    private String token = "";
+    private final String username = "evrimturan";
+    private final String password = "123456";
 
     public RunAfterBootService() {
     }
@@ -61,7 +65,21 @@ public class RunAfterBootService extends Service {
         Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
         Log.d(TAG_BOOT_EXECUTE_SERVICE, "RunAfterBootService onStartCommand() method.");
 
-        String time = String.valueOf(Calendar.getInstance().getTimeInMillis());
+        /*if(token == null) {
+            authenticate();
+        }
+        else {
+            test();
+        }*/
+
+        createRequest("test");
+
+
+        return super.onStartCommand(intent, flags, startId);
+    }
+
+    public void test() {
+        time = String.valueOf(Calendar.getInstance().getTimeInMillis());
 
         /*
         // Instantiate the RequestQueue.
@@ -94,7 +112,8 @@ public class RunAfterBootService extends Service {
         queue.add(stringRequest);*/
 
         RequestQueue queue = Volley.newRequestQueue(this);
-        String url ="http://104.40.132.100:80/test";
+        String url ="http://10.0.2.2:8080/test";
+        //String url ="http://104.40.132.100:80/test";
 
         JSONObject JSON = new JSONObject();
         try {
@@ -108,20 +127,150 @@ public class RunAfterBootService extends Service {
                 (Request.Method.POST, url, JSON, new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        Log.d(TAG_BOOT_EXECUTE_SERVICE, "RunAfterBootService onResponse() method.");
+                        Log.d(TAG_BOOT_EXECUTE_SERVICE, "RunAfterBootService test() onResponse() method.");
                     }
                 }, new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Log.d(TAG_BOOT_EXECUTE_SERVICE, "RunAfterBootService onErrorResponse() method.");
-
+                        int statusCode = error.networkResponse.statusCode;
+                        Log.d(TAG_BOOT_EXECUTE_SERVICE, "RunAfterBootService test() onErrorResponse() method.");
+                        Log.d(TAG_BOOT_EXECUTE_SERVICE, "RunAfterBootService test() onErrorResponse() method Error Netwoek Response Status Code: " + statusCode);
+                        if(statusCode == 401) {
+                           authenticate();
+                        }
                     }
-                });
+                }) {
+            /** Passing some request headers* */
+            @Override
+            public Map getHeaders() throws AuthFailureError {
+                HashMap headers = new HashMap();
+                headers.put("Content-Type", "application/json");
+                headers.put("Authorization", token);
+                return headers;
+            }
+        };
         queue.add(jsonObjectRequest);
 
-        Log.d(TAG_BOOT_EXECUTE_SERVICE, "RunAfterBootService request");
+        Log.d(TAG_BOOT_EXECUTE_SERVICE, "RunAfterBootService test() request");
+    }
 
-        return super.onStartCommand(intent, flags, startId);
+    public void authenticate() {
+
+        RequestQueue queue = Volley.newRequestQueue(this);
+        String url ="http://10.0.2.2:8080/authenticate";
+        //String url ="http://104.40.132.100:80/test";
+
+        JSONObject JSON = new JSONObject();
+        try {
+            JSON.put("username", "evrimturan");
+            JSON.put("password", "123456");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
+                (Request.Method.POST, url, JSON, new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.d(TAG_BOOT_EXECUTE_SERVICE, "RunAfterBootService authenticate() onResponse() method.");
+                        try {
+                            setToken(response.getString("token"));
+                            test();
+                        }
+                        catch (JSONException e) {
+                            System.out.println(e.getMessage());
+                            System.out.println(e.getStackTrace());
+                        }
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.d(TAG_BOOT_EXECUTE_SERVICE, "RunAfterBootService authenticate() onErrorResponse() method.");
+
+                    }
+                }) {
+            /** Passing some request headers* */
+            @Override
+            public Map getHeaders() throws AuthFailureError {
+                HashMap headers = new HashMap();
+                headers.put("Content-Type", "application/json");
+                return headers;
+            }
+        };
+        queue.add(jsonObjectRequest);
+
+        Log.d(TAG_BOOT_EXECUTE_SERVICE, "RunAfterBootService authenticate() request");
+    }
+
+    public void setToken(String t) {
+        token = "Bearer " + t;
+    }
+
+    public void createRequest(final String path) {
+        time = String.valueOf(Calendar.getInstance().getTimeInMillis());
+
+        RequestQueue queue = Volley.newRequestQueue(this);
+        String url ="http://10.0.2.2:8080/" + path;
+        //String url ="http://104.40.132.100:80/" + path;
+
+        JSONObject JSON = new JSONObject();
+        try {
+            if(path.equals("authenticate")) {
+                JSON.put("username", username);
+                JSON.put("password", password);
+            }
+            else if(path.equals("test")) {
+                JSON.put("guid", androidID);
+                JSON.put("time", time);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
+                (Request.Method.POST, url, JSON, new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.d(TAG_BOOT_EXECUTE_SERVICE, "RunAfterBootService createRequest() onResponse() method. " + path);
+                        if(path.equals("authenticate")) {
+                            try {
+                                setToken(response.getString("token"));
+                                Log.d(TAG_BOOT_EXECUTE_SERVICE, "RunAfterBootService createRequest() onResponse() method Token: " + token);
+                                createRequest("test");
+
+                            }
+                            catch (JSONException e) {
+                                System.out.println(e.getMessage());
+                                System.out.println(e.getStackTrace());
+                            }
+                        }
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.d(TAG_BOOT_EXECUTE_SERVICE, "RunAfterBootService createRequest() onErrorResponse() method. " + path);
+                        if(path.equals("test")) {
+                            int statusCode = error.networkResponse.statusCode;
+                            Log.d(TAG_BOOT_EXECUTE_SERVICE, "RunAfterBootService test() createRequest() onError() method Error Network Response Status Code: " + statusCode);
+                            if(statusCode == 401) {
+                                createRequest("authenticate");
+                            }
+                        }
+                    }
+                }) {
+            /** Passing some request headers* */
+            @Override
+            public Map getHeaders() throws AuthFailureError {
+                HashMap headers = new HashMap();
+                headers.put("Content-Type", "application/json");
+                if(path.equals("test")) {
+                    headers.put("Authorization", token);
+                }
+                return headers;
+            }
+        };
+        queue.add(jsonObjectRequest);
+        Log.d(TAG_BOOT_EXECUTE_SERVICE, "RunAfterBootService createRequest() finished " + path);
     }
 
     @Override
