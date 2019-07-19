@@ -1,4 +1,4 @@
-package com.campaignup.memubgsvc.reciever;
+package com.campaignup.memubgsvc.receiver;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;

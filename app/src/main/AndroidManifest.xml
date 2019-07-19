@@ -3,7 +3,10 @@
     package="com.campaignup.memubgsvc">
 
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+
+    <!--for memu comment out-->
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
@@ -14,11 +17,12 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <receiver
-            android:name=".reciever.BootDeviceReceiver"
+            android:name=".receiver.BootDeviceReceiver"
             android:enabled="true"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.QUICKBOOT_POWERON" />
             </intent-filter>
         </receiver>
 
@@ -30,7 +34,6 @@
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

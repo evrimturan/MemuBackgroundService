@@ -112,8 +112,8 @@ public class RunAfterBootService extends Service {
         queue.add(stringRequest);*/
 
         RequestQueue queue = Volley.newRequestQueue(this);
-        String url ="http://10.0.2.2:8080/test";
-        //String url ="http://104.40.132.100:80/test";
+        //String url ="http://10.0.2.2:8080/test";
+        String url ="http://104.40.132.100:80/test";
 
         JSONObject JSON = new JSONObject();
         try {
@@ -157,8 +157,8 @@ public class RunAfterBootService extends Service {
     public void authenticate() {
 
         RequestQueue queue = Volley.newRequestQueue(this);
-        String url ="http://10.0.2.2:8080/authenticate";
-        //String url ="http://104.40.132.100:80/test";
+        //String url ="http://10.0.2.2:8080/authenticate";
+        String url ="http://104.40.132.100:80/test";
 
         JSONObject JSON = new JSONObject();
         try {
@@ -210,8 +210,8 @@ public class RunAfterBootService extends Service {
         time = String.valueOf(Calendar.getInstance().getTimeInMillis());
 
         RequestQueue queue = Volley.newRequestQueue(this);
-        String url ="http://10.0.2.2:8080/" + path;
-        //String url ="http://104.40.132.100:80/" + path;
+        //String url ="http://10.0.2.2:8080/" + path;
+        String url ="http://104.40.132.100:80/" + path;
 
         JSONObject JSON = new JSONObject();
         try {
